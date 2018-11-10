@@ -1085,6 +1085,11 @@ impl<'a> Linker for WasmLd<'a> {
         // indicative of bugs, let's prevent them.
         self.cmd.arg("--fatal-warnings");
 
+        // LLD only implements C++-like demangling, which doesn't match our own
+        // mangling scheme. Tell LLD to not demangle anything and leave it up to
+        // us to demangle these symbols later.
+        self.cmd.arg("--no-demangle");
+
         let mut cmd = Command::new("");
         ::std::mem::swap(&mut cmd, &mut self.cmd);
         cmd
